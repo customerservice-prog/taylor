@@ -58,6 +58,13 @@ const collectionProducts=[
 {name:"Takeuchi TB230 Excavator",price:"$425.00"}
 ];
 
+function Logo(){
+ return <div className="logo" onClick={()=>go("/")}>
+   <div className="logoMain">TAYLOR RENTAL</div>
+   <div className="logoScript">Renting Memories!</div>
+ </div>
+}
+
 function currentRoute(){
  const p=(location.pathname.replace(/\/+$/,"")||"/");
  const productMatch=p.match(/\/products\/([^/]+)$/);
@@ -409,4 +416,13 @@ function App(){
  else body=<AboutPage/>;
  return <><Header/>{body}{r.type!=="home"&&<FloatingReservation/>}<Footer/></>
 }
-createRoot(document.getElementById("root")).render(<App/>);
+class AppErrorBoundary extends React.Component{
+ constructor(props){super(props);this.state={hasError:false}}
+ static getDerivedStateFromError(){return{hasError:true}}
+ componentDidCatch(error){console.error("Taylor demo render error",error)}
+ render(){
+  if(this.state.hasError)return <div style={{padding:"48px",fontFamily:"Arial,sans-serif"}}><h1>Taylor Rental</h1><p>The page hit a display error. Refresh once or return to the homepage.</p><button onClick={()=>{history.pushState({},"","/");location.reload()}}>RETURN HOME</button></div>;
+  return this.props.children;
+ }
+}
+createRoot(document.getElementById("root")).render(<AppErrorBoundary><App/></AppErrorBoundary>);

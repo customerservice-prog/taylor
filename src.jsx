@@ -1,141 +1,207 @@
 import React,{useMemo,useState} from "react";
 import{createRoot}from"react-dom/client";
-import{Search,Menu,X,Phone,MapPin,ChevronRight,Truck,Store,Flame,PartyPopper,Mail,Facebook,Instagram,Clock,Heart,Plus,Minus,ArrowLeft}from"lucide-react";
+import{Search,ChevronDown,ChevronRight,Truck,Box,Flame,Home,Heart,Facebook,Twitter,MapPin,Phone,Mail,Clock,Minus,Plus,ArrowLeft}from"lucide-react";
 import"./src.css";
 
+const CDN="https://rentingmemories.com/cdn/shop/files/";
 const IMG={
-hero1:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85",
-hero2:"https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1800&q=85",
-hero3:"https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=85",
-wedding:"https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=85",
-tools:"https://images.unsplash.com/photo-1581147036324-c1c89c2c8b5c?auto=format&fit=crop&w=1200&q=85",
-landscape:"https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1200&q=85",
-contractor:"https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=85",
-party:"https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=1200&q=85",
-tent:"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=85",
-bounce:"https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1200&q=85",
-machine:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=1200&q=85"
+ hero:CDN+"Store_1800x800px_Shopify_02b6ad8d-9742-4280-8e9a-cce7ba36491f_2048x.png?v=1721669048",
+ review:CDN+"Party_Event_1800x800px_Shopify_45e1b31b-f8ee-480d-b5ca-1831708fc820_1800x.png?v=1721670761",
+ social:CDN+"Party_Event_Wedding_Highlight_600x300px_Shopify_1200x.png?v=1721670859",
+ dunk:"https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=700&q=80",
+ bounce:"https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=700&q=80",
+ tent:"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=700&q=80",
+ party:"https://images.unsplash.com/photo-1549451371-64aa98a6f660?auto=format&fit=crop&w=900&q=80",
+ diy:"https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=900&q=80",
+ contractor:"https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80",
+ landscape:"https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1200&q=85",
+ wedding:"https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=900&q=80"
 };
 
+const brands=[
+["Gold Medal",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_200x200.png?v=1721669995"],
+["Bobcat",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_1_200x200.png?v=1721670019"],
+["Toro",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_2_200x200.png?v=1721670045"],
+["Takeuchi",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_3_200x200.png?v=1721670099"],
+["Palmer Snyder",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_4_200x200.png?v=1721670126"],
+["Eureka",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_5_200x200.png?v=1721670150"],
+["Haulotte",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_6_200x200.png?v=1721670174"],
+["Little Beaver",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_90969b7d-1f8b-4a56-98f0-b13474af94ea_200x200.png?v=1721670250"],
+["General Wire",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_1_9b2bdabc-a34b-43b5-9d76-91b1592d98e1_200x200.png?v=1721670287"],
+["Wenger",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_2_583c2a0d-81fe-4912-a0a1-d5841dc1d279_200x200.png?v=1721670381"],
+["Clark",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_b208628a-190f-4694-a649-5d9f053727b3_200x200.png?v=1721670439"],
+["Big John",CDN+"Party_Event_Wedding_Logo_500x500px_Shopify_1_a57c3a41-2b6a-4143-9385-6b4fd88e625a_200x200.png?v=1721670515"]
+];
+
 const products=[
-{slug:"gold-medal-two-bowl-frozen-drink-slushee-machine",name:"Gold Medal Two Bowl Frozen Drink Slushee Machine",price:"$175.00",img:IMG.machine,cat:"Concession"},
-{slug:"twister-display-dunk-tank",name:"Twister Display Dunk Tank",price:"$175.00",img:IMG.party,cat:"Games"},
-{slug:"bounce-house-with-slide",name:"Bounce House with Slide",price:"$275.00",img:IMG.bounce,cat:"Inflatables"},
-{slug:"eureka-30x30-twin-tube-frame-tent",name:"Eureka 30x30 Twin Tube Frame Tent",price:"$1,150.00",img:IMG.tent,cat:"Tents/Canopies"},
-{slug:"60-x-60-single-center-pole-tent",name:"60' x 60' Single Center Pole Tent",price:"$3,500.00",img:IMG.wedding,cat:"Tents/Canopies"},
-{slug:"40ft-x-100ft-twin-tube-plus-frame-tent",name:"40ft X 100ft Twin Tube Plus Frame Tent",price:"$4,200.00",img:IMG.hero2,cat:"Tents/Canopies"},
-{slug:"eureka-20x20-traditional-party-canopy",name:"Eureka 20x20 Traditional Party Canopy",price:"$200.00",img:IMG.party,cat:"Tents/Canopies"},
-{slug:"white-resin-folding-chair",name:"White Resin Folding Chair",price:"$4.50",img:IMG.wedding,cat:"Furniture"}
+{slug:"gold-medal-two-bowl-frozen-drink-slushee-machine",brand:"Gold Medal Products Co.",name:"Gold Medal Two Bowl Frozen Drink Slushee Machine",price:"",img:null},
+{slug:"dunk-tank",brand:"",name:"Twister Display Dunk Tank",price:"",img:IMG.dunk},
+{slug:"bounce-house-with-slide",brand:"",name:"Bounce House with Slide",price:"",img:IMG.bounce},
+{slug:"eureka-30x30-twin-tube-frame-tent",brand:"Eureka",name:"Eureka 30x30 Twin Tube Frame Tent",price:"",img:null},
+{slug:"60-x-60-single-center-pole-tent",brand:"",name:"60' x 60' Single Center Pole Tent",price:"",img:IMG.tent},
+{slug:"40ft-x-100ft-twin-tube-plus-frame-tent",brand:"",name:"40ft X 100ft Twin Tube Plus Frame Tent",price:"",img:IMG.wedding},
+{slug:"eureka-20x20-traditional-party-canopy",brand:"Eureka",name:"Eureka 20x20 Traditional Party Canopy",price:"$200.00",img:IMG.party}
 ];
 
-const categories=[
-["Party & Event Rentals",IMG.party,"party-event"],
-["Do It Yourself Rentals",IMG.tools,"do-it-yourself"],
-["Contractor Rentals",IMG.contractor,"contractor"],
-["Landscaping Rentals",IMG.landscape,"landscaping"],
-["Wedding Rentals",IMG.wedding,"wedding"]
+const collectionProducts=[
+{name:"Drape Screw-In Bases 11\"",price:"$5.00"},
+{name:"Choice 176SPCHA11QT 11qt Round Soup Chafer",price:"$15.00"},
+{name:"Flash Furniture X-Back Bar Stool",price:"$15.00"},
+{name:"CAC China 5oz Square Coffee Cup",price:"$0.90"},
+{name:"10\" Square Dinner Plate",price:"$0.90"},
+{name:"Castle 14HF Deep Fryer",price:"$175.00"},
+{name:"Hydromist Misting fan",price:"$120.00"},
+{name:"Eco-Light LED Light Tower",price:"$190.00"},
+{name:"Big John 2' x 3' Charcoal grill",price:"$65.00"},
+{name:"Whisper Watt 12K Generator",price:"$240.00"},
+{name:"Toro Material Buggy",price:"$225.00"},
+{name:"Takeuchi TB230 Excavator",price:"$425.00"}
 ];
 
-const catFilters=["Audio/Visual Equipment","Buffet","Concession","Cooking Equipment","Crowd Control","Dance Floors","Décor","Furniture","Games","Generators","Heating/Cooling","Inflatables","Linens","Pipe & Drape","Staging","Tabletop","Tents/Canopies"];
-
-function route(){
+function currentRoute(){
  const p=location.pathname;
  if(p.startsWith("/products/"))return{type:"product",slug:p.split("/")[2]};
  if(p.startsWith("/collections/"))return{type:"collection",slug:p.split("/")[2]};
  return{type:"home"};
 }
-function go(path){history.pushState({}, "",path);window.dispatchEvent(new PopStateEvent("popstate"))}
+function go(path){history.pushState({}, "",path);window.dispatchEvent(new PopStateEvent("popstate"));scrollTo(0,0)}
+
+function Logo(){
+ return <div className="logo" onClick={()=>go("/")}>
+   <div className="logoMain">TAYLOR RENTAL</div>
+   <div className="logoScript">Renting Memories!</div>
+ </div>
+}
 
 function Header(){
- const[open,setOpen]=useState(false);
- return <><div className="announcement">Stop By or Give Us a Call to Take a Look at Our Fleet of Rentals!</div>
- <header>
-   <div className="topline wrap">
-    <button className="menuBtn" onClick={()=>setOpen(true)}><Menu size={22}/><span>Menu</span></button>
-    <div className="brand" onClick={()=>go("/")}>
-      <div className="brandTaylor">TAYLOR</div><div className="brandRental">RENTAL</div><div className="brandSub">OF DEWITT · RENTING MEMORIES</div>
+ return <>
+  <div className="announcement"><div className="siteWrap">Stop By or Give Us a Call to Take a Look at Our Fleet of Rentals!<div className="announceSocial"><Twitter size={13}/><Facebook size={13}/></div></div></div>
+  <header className="header">
+   <div className="siteWrap headerMain">
+    <Logo/>
+    <div className="storeInfo">
+      <MapPin size={24}/>
+      <div><strong>TAYLOR RENTAL OF DEWITT, INC.</strong><span>3131 Erie Blvd. Syracuse, NY 13214</span><b>CLOSED</b></div>
+      <ChevronDown size={14}/>
     </div>
-    <div className="headerRight"><div className="contactChip"><Phone size={16}/> (315) 446-2222</div><button className="searchIcon"><Search size={21}/></button></div>
+    <div className="headerSearch"><Search size={18}/><input placeholder="Search all products..."/><button onClick={()=>go("/collections/all")}>SEARCH</button></div>
    </div>
-   <div className="searchbar wrap"><Search size={19}/><input placeholder="Search all products..." onKeyDown={e=>{if(e.key==="Enter")go("/collections/all")}}/><button onClick={()=>go("/collections/all")}>Search</button></div>
- </header>
- {open&&<div className="drawerBackdrop" onClick={()=>setOpen(false)}><aside className="drawer" onClick={e=>e.stopPropagation()}>
-  <button className="close" onClick={()=>setOpen(false)}><X/></button>
-  <div className="drawerBrand">TAYLOR RENTAL</div>
-  {["Home","All Rentals","Party & Event","Do It Yourself","Contractor","Landscaping","Wedding","Gallery","Contact Us"].map((x,i)=><button key={x} onClick={()=>{setOpen(false);go(i===0?"/":i===1?"/collections/all":"/collections/"+x.toLowerCase().replaceAll(" ","-").replaceAll("&","").replaceAll("--","-"))}}>{x}<ChevronRight size={18}/></button>)}
- </aside></div>}</>
+   <nav className="nav"><div className="siteWrap navIn">
+    <button onClick={()=>go("/collections/rentals")}>▣ VIEW RENTALS <ChevronDown size={13}/></button>
+    <button>SERVICES <ChevronDown size={13}/></button>
+    <button>WHAT'S NEW <ChevronDown size={13}/></button>
+    <button>BLOG</button><button>ABOUT US <ChevronDown size={13}/></button><button>LOCATIONS</button><button>CONTACT US</button>
+   </div></nav>
+  </header>
+ </>;
 }
 
 function Home(){
- const[hero,setHero]=useState(0);
- React.useEffect(()=>{const t=setInterval(()=>setHero(v=>(v+1)%3),5000);return()=>clearInterval(t)},[]);
- const slides=[
- {img:IMG.hero1,k:"EQUIPMENT RENTALS",h:"Get the Right Equipment for the Job",b:"Reliable rental equipment for homeowners, contractors and businesses."},
- {img:IMG.wedding,k:"EVENT RENTALS",h:"Make Your Next Event Unforgettable",b:"Tents, tables, chairs, linens, concessions and everything in between."},
- {img:IMG.tools,k:"DIY PROJECTS",h:"Big Project? Rent It Here.",b:"Professional-grade equipment without the cost of ownership."}
- ];
  return <main>
-  <section className="hero" style={{backgroundImage:`linear-gradient(90deg,rgba(0,0,0,.60),rgba(0,0,0,.15)),url(${slides[hero].img})`}}>
-    <div className="heroInner wrap"><div className="eyebrow">{slides[hero].k}</div><h1>{slides[hero].h}</h1><p>{slides[hero].b}</p><div className="heroBtns"><button className="primary" onClick={()=>go("/collections/rentals")}>Browse Rentals</button><button className="secondary" onClick={()=>go("/collections/party-event")}>Plan Your Event</button></div></div>
-    <div className="dots">{slides.map((_,i)=><button key={i} className={hero===i?"active":""} onClick={()=>setHero(i)}/>)}</div>
-  </section>
+   <section className="heroWrap siteWrap">
+    <div className="hero" style={{backgroundImage:`linear-gradient(rgba(0,0,0,.16),rgba(0,0,0,.18)),url("${IMG.hero}")`}}>
+      <div className="heroCopy"><span>Welcome to</span><h1>TAYLOR RENTAL OF DEWITT, NY</h1><p>We are truly a one-stop-shop for contractors, homeowners, and party/event equipment needs!</p></div>
+      <button className="reservation">▣ RENTAL RESERVATION REQUEST</button>
+      <div className="heroButtons"><button className="redBtn" onClick={()=>go("/collections/rentals")}>VIEW RENTALS</button><button className="darkBtn">READ ABOUT US</button></div>
+    </div>
+    <div className="heroDots"><span>‹</span><b>●</b><span>●</span><span>●</span><span>›</span></div>
+   </section>
 
-  <section className="section wrap"><div className="sectionHead"><div><p className="mini">FEATURED RENTALS</p><h2>Everything You Need for the Ultimate Summer Bash</h2></div><button className="textLink" onClick={()=>go("/collections/all")}>More featured products <ChevronRight size={16}/></button></div>
-   <div className="productGrid">{products.slice(0,7).map(p=><ProductCard p={p} key={p.slug}/>)}</div>
-  </section>
+   <section className="homeSection siteWrap featured">
+    <div className="titleRow"><h2>EVERYTHING YOU NEED FOR THE ULTIMATE SUMMER<br/>BASH</h2><a onClick={()=>go("/collections/all")}>MORE FEATURED PRODUCTS ›</a></div>
+    <div className="featureRail"><span className="railArrow">‹</span>{products.slice(0,5).map(p=><FeaturedCard p={p} key={p.slug}/>)}<span className="railArrow">›</span></div>
+    <div className="smallDots">○ ● ○</div>
+   </section>
 
-  <section className="categoryBand"><div className="wrap"><p className="mini light">SHOP BY CATEGORY</p><h2>Your Go-To Source for Top-Notch Rentals</h2><div className="catGrid">{categories.map(([name,img,slug])=><article key={slug} className="catCard" onClick={()=>go("/collections/"+slug)} style={{backgroundImage:`linear-gradient(180deg,transparent,rgba(0,0,0,.72)),url(${img})`}}><h3>{name}</h3><span>Explore Rentals <ChevronRight size={16}/></span></article>)}</div></div></section>
+   <section className="homeSection siteWrap">
+    <h2>YOUR GO-TO SOURCE FOR TOP-NOTCH RENTALS</h2>
+    <div className="categoryGrid">
+      <Category name="PARTY & EVENT RENTALS" img={IMG.party} path="/collections/rental-party-event"/>
+      <Category name="DO IT YOURSELF RENTALS" img={IMG.diy} path="/collections/rental-do-it-yourself"/>
+      <Category name="CONTRACTOR RENTALS" img={IMG.contractor} path="/collections/rental-contractor"/>
+      <Category name="LANDSCAPING RENTALS" img={IMG.landscape} path="/collections/rental-landscaping"/>
+      <Category name="WEDDING RENTALS" img={IMG.wedding} path="/collections/rental-wedding"/>
+    </div>
+   </section>
 
-  <section className="section wrap brandSection"><p className="mini">TRUSTED EQUIPMENT</p><h2>Carrying Top Quality & Trusted Brands</h2><div className="brandGrid">{["Gold Medal","Bobcat","Toro","Takeuchi","Palmer Snyder","Eureka","Haulotte","Little Beaver","General Wire","Wenger","Clark","Big John"].map(b=><div className="brandTile" key={b}><div className="brandMark">{b.split(" ").map(w=>w[0]).join("").slice(0,2)}</div><strong>{b}</strong></div>)}</div></section>
+   <section className="homeSection siteWrap brands">
+    <h2>CARRYING TOP QUALITY & TRUSTED BRANDS</h2>
+    <div className="brandGrid">{brands.map(([name,img])=><div className="brandCell" key={name}><div className="brandLogo"><img src={img} alt={name}/></div><strong>{name.toUpperCase()}</strong></div>)}</div>
+   </section>
 
-  <section className="services"><div className="wrap"><p className="mini light">MORE THAN RENTALS</p><h2>Take Advantage of Our Services Today</h2><div className="serviceGrid">
-   {[[Truck,"Delivery","Convenient delivery to your home, jobsite or event."],[Store,"In-Store Pickup","Reserve ahead and pick up at our Dewitt location."],[Flame,"Propane Refill / Exchange","Fast propane refill and exchange service."],[PartyPopper,"Tent Installation","Professional tent setup for events of all sizes."],[Heart,"Wedding / Event Consult.","Get expert help planning the details of your event."]].map(([Icon,t,d])=><div className="serviceCard" key={t}><Icon size={32}/><h3>{t}</h3><p>{d}</p><span>Click Here for More Information <ChevronRight size={15}/></span></div>)}
-  </div></div></section>
+   <section className="homeSection siteWrap services">
+    <h2>TAKE ADVANTAGE OF OUR SERVICES TODAY</h2>
+    <div className="serviceGrid">
+     <Service icon={Truck} name="DELIVERY"/>
+     <Service icon={Box} name="IN-STORE PICKUP"/>
+     <Service icon={Flame} name={"PROPANE REFILL /\nEXCHANGE"}/>
+     <Service icon={Home} name="TENT INSTALLATION"/>
+     <Service icon={Heart} name={"WEDDING / EVENT\nCONSULT."}/>
+    </div>
+   </section>
 
-  <section className="socialSplit"><div className="socialImage" style={{backgroundImage:`url(${IMG.contractor})`}}/><div className="socialText"><p className="mini">STAY CONNECTED</p><h2>Check Out Our Socials</h2><p>Like and follow Taylor Rental of Dewitt, NY / Renting Memories for tips, product recommendations, great photos, deals, events, and more!</p><div className="socialBtns"><button><Facebook/> Like Our Facebook Page</button><button><Instagram/> Follow Us</button></div></div></section>
+   <section className="socialBlock siteWrap">
+    <div></div><div className="socialCopy"><h2>CHECK OUT OUR SOCIALS</h2><p>Like and follow Taylor Rental of Dewitt, NY / Renting Memories on Facebook and X for tips, product recommendations, great photos, deals, events, and more!</p><div><button>LIKE OUR FACEBOOK PAGE</button><button>FOLLOW US ON X</button></div></div>
+   </section>
 
-  <section className="newsletter"><div className="wrap newsletterIn"><div><span>Subscribe to our newsletter</span><h2>Promotions, new products and sales. Directly to your inbox.</h2></div><form onSubmit={e=>e.preventDefault()}><input placeholder="First Name"/><input placeholder="Email Address"/><button>Sign Up</button></form></div></section>
+   <section className="newsletter siteWrap">
+    <h2>SUBSCRIBE TO OUR NEWSLETTER</h2><p>Promotions, new products and sales. Directly to your inbox.</p>
+    <div className="newsletterForm"><input placeholder="First Name"/><input placeholder="Email Address"/></div><button>SIGN UP</button>
+   </section>
 
-  <section className="landscapeFeature" style={{backgroundImage:`linear-gradient(90deg,rgba(0,0,0,.6),rgba(0,0,0,.15)),url(${IMG.landscape})`}}><div className="wrap"><p>Check out our</p><h2>Landscaping Rentals</h2><span><MapPin size={17}/> Syracuse, NY</span><button onClick={()=>go("/collections/landscaping")}>View Landscaping Rentals</button></div></section>
+   <section className="landscapeBanner" style={{backgroundImage:`linear-gradient(rgba(0,0,0,.22),rgba(0,0,0,.24)),url("${IMG.landscape}")`}}>
+    <div><span>Check out our</span><h2>LANDSCAPING RENTALS</h2><small>Syracuse, NY</small><button onClick={()=>go("/collections/rental-landscaping")}>VIEW LANDSCAPING RENTALS</button></div>
+   </section>
 
-  <section className="section wrap"><p className="mini">FROM OUR BLOG</p><h2>Read Our Latest Blogs & Articles...</h2><div className="blogGrid">{[
-   ["Hosting a Large Gathering? Event Rental Tips for Managing a Crowd","October 1, 2026"],
-   ["Most Popular Rental Equipment Rentals for Fall","September 1, 2026"],
-   ["Hosting an End-of-Summer Party: Simple Ways to Create an Unforgettable Event","August 4, 2026"]
-  ].map(([t,d])=><article className="blogCard" key={t}><div className="blogImg" style={{backgroundImage:`url(${IMG.party})`}}/><div><span>{d}</span><h3>{t}</h3><p>Planning is easier when you have the right equipment, the right quantities, and a rental team that knows events.</p><a>Read More →</a></div></article>)}</div></section>
+   <section className="homeSection siteWrap blogSection">
+    <h2>READ OUR LATEST BLOGS & ARTICLES...</h2>
+    <div className="blogGrid">
+      <Blog title="Hosting a Large Gathering? Event Rental Tips for Managing a Crowd" date="October 1, 2026"/>
+      <Blog title="Most Popular Rental Equipment Rentals for Fall" date="September 1, 2026"/>
+      <Blog title="Hosting an End-of-Summer Party: Simple Ways to Create an Unforgettable Event" date="August 4, 2026"/>
+    </div>
+    <button className="viewAll">VIEW ALL</button>
+   </section>
 
-  <section className="reviewBand" style={{backgroundImage:`linear-gradient(90deg,rgba(0,0,0,.64),rgba(0,0,0,.25)),url(${IMG.wedding})`}}><div className="wrap"><p>Take a moment and</p><h2>Review Our Store & Services</h2><span>We can't wait to hear from you!</span><button>Leave a Review</button></div></section>
+   <section className="reviewBanner siteWrap" style={{backgroundImage:`linear-gradient(rgba(0,0,0,.34),rgba(0,0,0,.34)),url("${IMG.review}")`}}>
+    <span>Take a moment and</span><h2>REVIEW OUR STORE & SERVICES</h2><p>We can't wait to hear from you!</p><button>LEAVE A REVIEW</button>
+   </section>
  </main>
 }
 
-function ProductCard({p}){return <article className="productCard" onClick={()=>go("/products/"+p.slug)}><div className="productImg" style={{backgroundImage:`url(${p.img})`}}/><div className="productBody"><span>Rental</span><h3>{p.name}</h3><p>rent from <strong>{p.price}</strong></p></div></article>}
+function FeaturedCard({p}){return <article className="featuredCard" onClick={()=>go("/products/"+p.slug)}>
+ <div className="featuredImage">{p.img?<img src={p.img} alt=""/>:<span>No Image<br/>Available</span>}</div>
+ <div className="featuredMeta">{p.brand&&<small>{p.brand}</small>}<h3>{p.name}</h3>{p.price&&<p>rent from {p.price}</p>}</div>
+</article>}
+
+function Category({name,img,path}){return <article className="categoryCard" onClick={()=>go(path)}><img src={img} alt=""/><strong>{name}</strong></article>}
+
+function Service({icon:Icon,name}){return <article className="service"><div className="serviceIcon"><Icon size={34}/></div><strong>{name.split("\n").map((x,i)=><React.Fragment key={x}>{i>0&&<br/>}{x}</React.Fragment>)}</strong><span>Click Here for More<br/>Information</span></article>}
+
+function Blog({title,date}){return <article className="blogCard"><div className="blogSpacer"></div><h3>{title}</h3><small>{date}</small><p>Bringing people together can make for an unforgettable celebration, but it also requires a little extra planning. Whether you're organizing an event, project, or gathering...</p><a>Read More →</a></article>}
 
 function Collection({slug}){
- const title=slug==="all"?"Products":slug.split("-").map(x=>x[0].toUpperCase()+x.slice(1)).join(" ").replace("Diy","Do It Yourself").replace("Party Event","Party & Event");
- const list=useMemo(()=>Array.from({length:24},(_,i)=>products[i%products.length]),[]);
- return <main className="collectionPage wrap">
-   <button className="backLink" onClick={()=>go("/")}><ArrowLeft size={16}/> Home</button>
-   <div className="notice"><strong>Please Note:</strong><br/>There is a damage waiver charge and sales tax applied to all items. If you'd like to make a reservation you must call the store.<br/><b>Online requests for availability are NOT reservations.</b></div>
-   <h1>{title}</h1>
-   <div className="collectionLayout"><aside className="filters"><h3>Rental Category</h3>{catFilters.map((x,i)=><label key={x}><input type="checkbox"/>{x} <span>({i*3+1})</span></label>)}</aside><section className="results"><div className="resultsTop"><span>{list.length} products</span><select><option>Sort by</option><option>Featured</option><option>Price, low to high</option><option>Price, high to low</option></select></div><div className="productGrid collectionGrid">{list.map((p,i)=><ProductCard p={{...p,slug:p.slug+"-"+i}} key={i}/>)}</div></section></div>
+ const title=(slug||"all").replace(/^rental-/,"").replaceAll("-"," ").replace(/\b\w/g,c=>c.toUpperCase()).replace("All","Products");
+ const list=useMemo(()=>Array.from({length:24},(_,i)=>collectionProducts[i%collectionProducts.length]),[]);
+ return <main className="catalog siteWrap">
+  <button className="backLink" onClick={()=>go("/")}><ArrowLeft size={16}/> Home</button>
+  <div className="notice"><b>Please Note:</b><p>There is a damage waiver charge and sales tax applied to all items. If you'd like to make a reservation you must call the store.</p><strong>Online requests for availability are NOT reservations.</strong></div>
+  <h1>{title}</h1>
+  <div className="catalogLayout"><aside><h3>Rental Category</h3>{["Audio/Visual Equipment","Buffet","Concession","Construction","Cooking Equipment","Crowd Control","Dance Floors","Décor","Furniture","Games","Generators","Heating/Cooling","Inflatables","Linens","Pipe & Drape","Staging","Tabletop","Tents/Canopies"].map((x,i)=><label key={x}><input type="checkbox"/>{x} <em>({i*3+1})</em></label>)}</aside>
+  <section><div className="sort">Sort by <select><option>Featured</option><option>Price, low to high</option><option>Price, high to low</option></select></div><div className="catalogGrid">{list.map((p,i)=><article className="catalogCard" key={i}><div className="catalogImg"></div><small>Rental</small><h3>{p.name}</h3><p>rent from <b>{p.price}</b></p></article>)}</div></section></div>
  </main>
 }
 
 function Product({slug}){
- let p=products.find(x=>slug.startsWith(x.slug))||products[4];
- const[q,setQ]=useState(1),[sent,setSent]=useState(false);
- return <main className="productPage wrap"><button className="backLink" onClick={()=>history.back()}><ArrowLeft size={16}/> Back to rentals</button>
-  <div className="notice compact"><strong>Please Note:</strong> There is a damage waiver charge and sales tax applied to all items. Online requests for availability are NOT reservations.</div>
-  <div className="productDetail"><div className="detailImage" style={{backgroundImage:`url(${p.img})`}}/><div className="detailInfo"><span className="rentalTag">Rental</span><h1>{p.name}</h1><p className="durationLabel">Select Rental Duration</p><select className="duration"><option>{p.price} USD - 1 Day</option><option>{p.price} USD - 1 Weekend</option></select><label>Number Requesting</label><div className="qty"><button onClick={()=>setQ(Math.max(1,q-1))}><Minus/></button><b>{q}</b><button onClick={()=>setQ(q+1)}><Plus/></button></div><button className="availability" onClick={()=>setSent(true)}>Request Availability</button>{sent&&<div className="success">Thanks! Your availability request has been prepared. Please call the store to confirm your reservation.</div>}</div></div>
-  <section className="details"><h2>Item Details</h2><p>The right rental makes an important project or event easier. This item is maintained by Taylor Rental of Dewitt and is available by request. Contact the store for scheduling, delivery options, setup requirements and final availability.</p></section>
- </main>
+ const p=products.find(x=>slug?.startsWith(x.slug))||products[1];const[q,setQ]=useState(1);
+ return <main className="productPage siteWrap"><button className="backLink" onClick={()=>history.back()}><ArrowLeft size={16}/> Back</button><div className="notice"><b>Please Note:</b><p>There is a damage waiver charge and sales tax applied to all items. If you'd like to make a reservation you must call the store.</p><strong>Online requests for availability are NOT reservations.</strong></div><div className="productDetail"><div className="productPhoto">{p.img?<img src={p.img}/>:<span>No Image Available</span>}</div><div><h1>{p.name}</h1><label>Select Rental Duration</label><select><option>{p.price||"$175.00"} USD - 1 Day</option><option>{p.price||"$175.00"} USD - 1 Weekend</option></select><label>Number Requesting</label><div className="qty"><button onClick={()=>setQ(Math.max(1,q-1))}><Minus size={16}/></button><b>{q}</b><button onClick={()=>setQ(q+1)}><Plus size={16}/></button></div><button className="requestBtn">Request Availability</button></div></div></main>
 }
 
-function Footer(){return <footer><div className="wrap footerGrid"><div><div className="footerBrand">TAYLOR RENTAL</div><p>Taylor Rental of Dewitt, NY / Renting Memories</p><p><MapPin size={15}/> Dewitt / Syracuse, New York</p><p><Phone size={15}/> (315) 446-2222</p></div><div><h4>Rentals</h4><a onClick={()=>go("/collections/party-event")}>Party & Event</a><a onClick={()=>go("/collections/do-it-yourself")}>Do It Yourself</a><a onClick={()=>go("/collections/contractor")}>Contractor</a><a onClick={()=>go("/collections/landscaping")}>Landscaping</a><a onClick={()=>go("/collections/wedding")}>Wedding</a></div><div><h4>Customer Service</h4><a>Delivery</a><a>In-Store Pickup</a><a>Tent Installation</a><a>Contact Us</a><a>Policies</a></div><div><h4>Hours</h4><p><Clock size={15}/> Mon–Fri: 7:30 AM–5:30 PM</p><p>Saturday: 8:00 AM–4:00 PM</p><p>Sunday: Closed</p></div></div><div className="copyright">© 2026 Taylor Rental of Dewitt / Renting Memories · Demo recreation for PartyRentalCRM presentation</div></footer>}
+function Footer(){return <footer><div className="siteWrap footerGrid">
+ <div><h4>MAIN MENU</h4><a>View Rentals</a><a>Services</a><a>Events</a><a>Blog</a><a>About Us</a><a>Locations</a><a>Contact Us</a></div>
+ <div><h4>TAYLOR RENTAL OF DEWITT, NY / RENTING MEMORIES</h4><p><MapPin size={13}/>3131 Erie Blvd, Syracuse, NY 13214</p><div className="hours"><span>Mon:</span><b>7:30 AM - 5:30 PM</b><span>Tue:</span><b>7:30 AM - 5:30 PM</b><span>Wed:</span><b>7:30 AM - 5:30 PM</b><span>Thu:</span><b>7:30 AM - 5:30 PM</b><span>Fri:</span><b>7:30 AM - 5:30 PM</b><span>Sat:</span><b>CLOSED</b><span>Sun:</span><b>CLOSED</b></div><p><Phone size={13}/>(315) 446-7701</p></div>
+ <div className="footerNewsletter"><h4>NEWSLETTER</h4><p>Promotions, new products and sales. Directly to your inbox.</p><div><input placeholder="First Name"/><input placeholder="Email Address"/></div><button>SIGN UP</button></div>
+ </div><div className="siteWrap footerBottom"><span>Search · Privacy Policy · Return Policy · Terms of Service · Accessibility Statement</span><span><Twitter size={13}/> <Facebook size={13}/></span></div><div className="siteWrap copyright">© 2026 Taylor Rental of Dewitt, NY / Renting Memories. Powered by PartyRentalCRM.</div></footer>}
 
-function App(){
- const[r,setR]=useState(route());
- React.useEffect(()=>{const fn=()=>setR(route());addEventListener("popstate",fn);return()=>removeEventListener("popstate",fn)},[]);
- return <><Header/>{r.type==="home"?<Home/>:r.type==="collection"?<Collection slug={r.slug}/>:<Product slug={r.slug}/>}<Footer/></>
-}
+function App(){const[r,setR]=useState(currentRoute());React.useEffect(()=>{const fn=()=>setR(currentRoute());addEventListener("popstate",fn);return()=>removeEventListener("popstate",fn)},[]);return <><Header/>{r.type==="home"?<Home/>:r.type==="collection"?<Collection slug={r.slug}/>:<Product slug={r.slug}/>}<Footer/></>}
 createRoot(document.getElementById("root")).render(<App/>);

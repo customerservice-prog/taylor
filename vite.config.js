@@ -3,18 +3,16 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: "dist",
+    sourcemap: false
+  },
   server: {
     host: "0.0.0.0",
-    allowedHosts: [
-      "taylor-production-f620.up.railway.app",
-      ".up.railway.app"
-    ]
+    allowedHosts: true
   },
   preview: {
     host: "0.0.0.0",
-    allowedHosts: [
-      "taylor-production-f620.up.railway.app",
-      ".up.railway.app"
-    ]
+    allowedHosts: true
   }
 });

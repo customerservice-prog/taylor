@@ -1,6 +1,6 @@
 import React,{useMemo,useState} from "react";
 import{createRoot}from"react-dom/client";
-import{Search,ChevronDown,ChevronRight,Truck,Box,Flame,Home,Heart,Facebook,Twitter,MapPin,Phone,Mail,Clock,Minus,Plus,ArrowLeft}from"lucide-react";
+import{Search,ChevronDown,ChevronRight,Truck,Box,Flame,House,Heart,Facebook,Twitter,MapPin,Phone,Mail,Clock,Minus,Plus,ArrowLeft}from"lucide-react";
 import"./src.css";
 
 const CDN="https://rentingmemories.com/cdn/shop/files/";
@@ -135,7 +135,7 @@ function Home(){
      <Service icon={Truck} name="DELIVERY"/>
      <Service icon={Box} name="IN-STORE PICKUP"/>
      <Service icon={Flame} name={"PROPANE REFILL /\nEXCHANGE"}/>
-     <Service icon={Home} name="TENT INSTALLATION"/>
+     <Service icon={House} name="TENT INSTALLATION"/>
      <Service icon={Heart} name={"WEDDING / EVENT\nCONSULT."}/>
     </div>
    </section>
